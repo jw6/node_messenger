@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const mime = require('mime');
 const cache = {};
+const chatServer = require('./lib/chat_server');
 
 /*  handle the sending of 404 erros
  when a file is request that doesn't
