@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const mime = require('mimie');
+const mime = require('mime');
 const cache = {};
 
 /*  handle the sending of 404 erros
@@ -18,7 +18,7 @@ and then sends the contents of the file */
 let sendFile = (res, filePath, fileContents) => {
   res.writeHead(
     200,
-    {"content-type": mime.lookup(path.basename(filePath))}
+    {"content-type": mime.getType(path.basename(filePath))}
   );
   res.end(fileContents);
 }
@@ -43,3 +43,20 @@ let serverStatic = (res, cache, absPath) => {
     });
   }
 }
+
+let server = http.createServer((req, res) => {
+  let filePath = false;
+
+  if(req.url === '/') {
+    filePath = 'public/index.html';
+  } else {
+    filePath = 'public' + req.url;
+  }
+
+  let absPath = './' + filePath;
+  serverStatic(res, cache, absPath);
+});
+
+server.listen(3000, () => {
+  console.log(`Server listening on port 3000`);
+})
